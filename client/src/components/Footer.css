@@ -1,0 +1,15 @@
+.support-button {
+    background-color: #007bff; /* Button color */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .support-button:hover {
+    background-color: #0056b3; /* Hover color */
+  }
+  
