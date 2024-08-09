@@ -9,6 +9,8 @@ import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import Navbar from './components/Navbar';
 import './App.css';
+import Footer from './components/footer';
+import CustomerSupport from './components/customerSupport';
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<NotFoundPage />} />
+        =<Route path="/customer-support"element={<CustomerSupport/>} />
       </Routes>
+      <Footer/>
     </div>
   );
 }
