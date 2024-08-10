@@ -23,7 +23,7 @@ def create_app():
     jwt.init_app(app)
 
     # Enable CORS for specific frontend domain
-    CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+    CORS(app)
 
     # Create database tables if they don't exist
     with app.app_context():

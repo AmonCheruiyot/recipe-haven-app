@@ -16,10 +16,29 @@ def get_recipes():
         'ingredients': recipe.ingredients,
         'instructions': recipe.instructions,
         'main_photo': recipe.main_photo,
-        # 'step_photos': recipe.step_photos,
-        # 'ingredient_photos': recipe.ingredient_photos,
-        # 'author': recipe.author.username
+        'step_photos': recipe.step_photos,
+        'ingredient_photos': recipe.ingredient_photos,
+        'author': recipe.author.username
     } for recipe in recipes])
+
+# Get a recipe by ID
+@recipe.route('/recipes/<int:recipe_id>', methods=['GET'])
+def get_recipe_by_id(recipe_id):
+    recipe = Recipe.query.get(recipe_id)
+    if not recipe:
+        return jsonify({"message": "Recipe not found"}), 404
+
+    return jsonify({
+        'id': recipe.id,
+        'name': recipe.name,
+        'description': recipe.description,
+        'ingredients': recipe.ingredients,
+        'instructions': recipe.instructions,
+        'main_photo': recipe.main_photo,
+        'step_photos': recipe.step_photos,
+        'ingredient_photos': recipe.ingredient_photos,
+        'author': recipe.author.username
+    })
 
 # Add a new recipe
 @recipe.route('/recipes', methods=['POST'])
@@ -130,7 +149,7 @@ def get_favorites():
         'description': favorite.recipe.description
     } for favorite in favorites])
 
-
+# Add to wishlist
 @recipe.route('/recipes/<int:recipe_id>/wishlist', methods=['POST'])
 @jwt_required()
 def add_to_wishlist(recipe_id):
@@ -143,7 +162,7 @@ def add_to_wishlist(recipe_id):
     db.session.commit()
     return jsonify({"message": "Recipe added to wishlist"}), 201
 
-
+# Get all recipes in wishlist for the current user
 @recipe.route('/wishlist', methods=['GET'])
 @jwt_required()
 def get_wishlist():
@@ -155,7 +174,7 @@ def get_wishlist():
         'description': wish.recipe.description
     } for wish in wishlist])
 
-
+# Recommend a recipe
 @recipe.route('/recipes/<int:recipe_id>/recommend', methods=['POST'])
 @jwt_required()
 def recommend_recipe(recipe_id):
@@ -170,6 +189,7 @@ def recommend_recipe(recipe_id):
     db.session.commit()
     return jsonify({"message": "Recipe recommended successfully"}), 201
 
+# Get all recommendations for the current user
 @recipe.route('/recommendations', methods=['GET'])
 @jwt_required()
 def get_recommendations():
@@ -182,30 +202,22 @@ def get_recommendations():
         'reason': recommendation.reason
     } for recommendation in recommendations])
 
-
-#search algo
+# Search for recipes
 @recipe.route('/recipes/search', methods=['GET'])
 def search_recipes():
-    # Get search query from request arguments
     query = request.args.get('query', '').strip()
-    filter_by = request.args.get('filter_by', 'name')  # Default filter is by name
+    filter_by = request.args.get('filter_by', 'name')
 
     if not query:
         return jsonify({"message": "No search query provided"}), 400
 
-    # Search by name
     if filter_by == 'name':
         results = Recipe.query.filter(Recipe.name.ilike(f"%{query}%")).all()
-
-    # Search by ingredients
     elif filter_by == 'ingredients':
         results = Recipe.query.filter(Recipe.ingredients.ilike(f"%{query}%")).all()
-
-    # Invalid filter
     else:
         return jsonify({"message": "Invalid filter"}), 400
 
-    # Return matching recipes
     return jsonify([{
         'id': recipe.id,
         'name': recipe.name,
