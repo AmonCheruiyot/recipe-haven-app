@@ -1,32 +1,58 @@
 import React, { useState } from 'react';
-import './CustomerSupport.css'; 
+import './CustomerSupport.css';
 
 const CustomerSupport = () => {
-  const [username, setUsername] = useState('');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
+  const [responseMessage, setResponseMessage] = useState(''); // To show success or error messages
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission logic here (e.g., send data to the server)
-    console.log('User:', username);
-    console.log('Message:', message);
 
-    // Clear the form fields after submission
-    setUsername('');
-    setMessage('');
+    // Retrieve JWT token from storage (if you're storing it there)
+    const jwtToken = localStorage.getItem('jwt_token');
+
+    // Send data to the server
+    fetch('http://127.0.0.1:5000/support/tickets', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`, // Add JWT token for authentication
+      },
+      body: JSON.stringify({
+        subject: subject, // Include subject
+        message: message,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to submit support ticket');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setResponseMessage('Support ticket submitted successfully!');
+        // Clear the form fields after submission
+        setSubject(''); // Clear subject
+        setMessage('');
+      })
+      .catch((error) => {
+        setResponseMessage(`Error: ${error.message}`);
+      });
   };
 
   return (
     <div className="customer-support">
       <h2>Contact Customer Support</h2>
+      {responseMessage && <p>{responseMessage}</p>}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="username">Username:</label>
+          <label htmlFor="subject">Subject:</label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="subject"
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
             required
           />
         </div>
