@@ -1,23 +1,26 @@
+/* Footer Styles */
+
 .footer {
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #D7CCC8; /* Soft Beige for the footer background */
+    background-color: #F9FBE7; /* Lighter Green for a soft and fresh footer background */
     text-align: center;
-    padding: px 0;  /* Adjusted padding for better spacing */
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    font-size: 12px; /* Slightly larger font size for better readability */
-    line-height: 1.5; /* More comfortable line height for text */
-    color: #4CAF50; /* Fresh Green text color for contrast */
+    padding: 5px 0;  /* Reduced padding for a smaller height */
+    box-shadow: 0 -1px 5px rgba(56, 142, 60, 0.3); /* Brighter green-tinted shadow for a subtle, fresh effect */
+    font-size: 14px; /* Comfortable font size for readability */
+    line-height: 1.4; /* Slightly reduced line height for compact text */
+    color: #388E3C; /* Darker Green text color for contrast */
 }
 
 .footer a {
-    color: #4CAF50; /* Fresh Green for link text */
+    color: #388E3C; /* Matching Green for link text */
     text-decoration: none; /* Remove underline from links */
+    font-weight: bold; /* Bold links for emphasis */
 }
 
 .footer a:hover {
     text-decoration: underline; /* Underline effect on hover for better visibility */
-    color: #6A1B2D; /* Optional darker accent color on hover */
+    color: #2E7D32; /* Darker Green accent color on hover */
 }
