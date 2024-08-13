@@ -28,7 +28,7 @@ def submit_ticket():
         message=message,
         user_id=user_id,
         status='open'
-    )
+    ) 
 
     db.session.add(new_ticket)
     db.session.commit()

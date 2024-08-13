@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext'; // Adjust the path as necessary
+import './SupportPopup.css'; // Import the CSS file
 
 const SupportPopup = () => {
   const [subject, setSubject] = useState('');
@@ -8,7 +9,7 @@ const SupportPopup = () => {
   const { authData } = useContext(AuthContext); // Get authData from AuthContext
 
   useEffect(() => {
-    // No need to fetch token separately; it's already part of authData
+    // Check if the authentication token is present
     if (!authData.token) {
       console.error('No authentication token found.');
     }
@@ -17,27 +18,31 @@ const SupportPopup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check for authentication
+    // Ensure user is authenticated
     if (!authData.token) {
-      alert('User not found or not authenticated.');
+      alert('User not authenticated.');
       return;
     }
 
     try {
-      await axios.post('/support/tickets',
-        { subject, message },
+      // Submit the support ticket
+      await axios.post('https://recipe-app-0i3m.onrender.com/support/tickets', 
+        { subject, message }, 
         {
           headers: {
-            Authorization: `Bearer ${authData.token}` // Send JWT token in Authorization header
+            Authorization: `Bearer ${authData.token}` // Attach the JWT token
           }
         }
       );
       alert('Support ticket submitted successfully!');
+      // Clear the form fields after submission
       setSubject('');
       setMessage('');
     } catch (error) {
-      console.error(error);
+      console.error('Error submitting support ticket:', error);
+
       if (error.response) {
+        // Display specific error message from server response if available
         switch (error.response.status) {
           case 400:
             alert('Please provide both subject and message.');
@@ -49,6 +54,7 @@ const SupportPopup = () => {
             alert('There was an error submitting your support ticket.');
         }
       } else {
+        // Handle network errors
         alert('Network error. Please try again later.');
       }
     }
