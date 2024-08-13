@@ -150,14 +150,13 @@ const ProfilePopup = ({ onClose }) => {
       <h3 className="favorite-recipes-title">Favorite Recipes:</h3>
       <ul className="favorite-recipes-list">
         {favoriteRecipes.map((recipe) => (
-          <li key={recipe.id} className="favorite-recipe-item" onClick={() => handleRecipeClick(recipe)}>
+          <li key={recipe.id} onClick={() => handleRecipeClick(recipe)} className="favorite-recipe-item">
             {recipe.name}
           </li>
         ))}
       </ul>
-      <button onClick={handleClose} className="close-button">Close</button>
-
       {selectedRecipe && <RecipePopup recipe={selectedRecipe} onClose={handleCloseRecipePopup} />}
+      <button onClick={handleClose} className="close-button">Close</button>
     </div>
   );
 };
