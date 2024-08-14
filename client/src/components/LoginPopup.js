@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../context/AuthContext';  // Ensure your AuthContext is set up correctly
+import { AuthContext } from '../context/AuthContext'; // Ensure your AuthContext is set up correctly
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { setToken } from '../utils'; // Import the setToken utility function
 
 const LoginPopup = ({ onClose }) => {
   const [email, setEmail] = useState('');
@@ -17,8 +18,15 @@ const LoginPopup = ({ onClose }) => {
         password 
       });
 
+      // Get the token from the response
+      const token = response.data.access_token;
+
       // Set auth data in context
-      setAuthData({ user: response.data.identity, token: response.data.access_token }); 
+      setAuthData({ user: response.data.identity, token }); 
+
+      // Store the token in localStorage
+      setToken(token);
+
       alert('Login successful!');
       setEmail('');
       setPassword('');

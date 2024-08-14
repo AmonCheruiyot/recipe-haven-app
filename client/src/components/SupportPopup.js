@@ -1,19 +1,28 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext'; // Adjust the path as necessary
+import { getToken } from '../utils'; // Import the getToken utility function
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './SupportPopup.css'; // Import the CSS file
 
-const SupportPopup = () => {
+const SupportPopup = ({ onClose }) => {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const { authData } = useContext(AuthContext); // Get authData from AuthContext
+  const { authData, setAuthData } = useContext(AuthContext); // Get authData from AuthContext
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
-    // Check if the authentication token is present
+    // Check if the authentication token is present in the context
     if (!authData.token) {
-      console.error('No authentication token found.');
+      // Retrieve token from localStorage if not available in context
+      const tokenFromLocalStorage = getToken();
+      if (tokenFromLocalStorage) {
+        setAuthData(prevData => ({ ...prevData, token: tokenFromLocalStorage }));
+      } else {
+        console.error('No authentication token found.');
+      }
     }
-  }, [authData.token]);
+  }, [authData.token, setAuthData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +47,8 @@ const SupportPopup = () => {
       // Clear the form fields after submission
       setSubject('');
       setMessage('');
+      if (onClose) onClose(); // Call onClose to close the popup
+      navigate('/recipes'); // Redirect to RecipesPage
     } catch (error) {
       console.error('Error submitting support ticket:', error);
 
@@ -85,6 +96,6 @@ const SupportPopup = () => {
       </form>
     </div>
   );
-}
+};
 
 export default SupportPopup;
