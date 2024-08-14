@@ -12,6 +12,12 @@ const HomepageNavbar = () => {
   const handleOpenRegister = () => setShowRegisterPopup(true);
   const handleCloseRegister = () => setShowRegisterPopup(false);
 
+  // Handle opening LoginPopup from RegisterPopup
+  const handleRegisterSuccess = () => {
+    handleCloseRegister(); // Close the RegisterPopup
+    handleOpenLogin(); // Open the LoginPopup
+  };
+
   return (
     <nav>
       <div className="logo">Recipe Haven</div>
@@ -21,7 +27,12 @@ const HomepageNavbar = () => {
         <span onClick={handleOpenRegister} className="nav-item">Register</span>
       </div>
       {showLoginPopup && <LoginPopup onClose={handleCloseLogin} />}
-      {showRegisterPopup && <RegisterPopup onClose={handleCloseRegister} />}
+      {showRegisterPopup && (
+        <RegisterPopup
+          onClose={handleCloseRegister}
+          onRegisterSuccess={handleRegisterSuccess} // Pass the callback
+        />
+      )}
     </nav>
   );
 }
