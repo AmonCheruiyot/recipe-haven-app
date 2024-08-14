@@ -1,41 +1,43 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../context/AuthContext'; // Ensure your AuthContext is set up correctly
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { setToken } from '../utils'; // Import the setToken utility function
+import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPopup = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { setAuthData } = useContext(AuthContext);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post('https://recipe-app-0i3m.onrender.com/login', { 
-        username: email,  // Assuming username is expected
+        username: email,
         password 
       });
 
-      // Get the token from the response
-      const token = response.data.access_token;
+      // Extract necessary data from the response
+      const { identity, access_token, is_admin } = response.data;
 
-      // Set auth data in context
-      setAuthData({ user: response.data.identity, token }); 
-
-      // Store the token in localStorage
-      setToken(token);
+      // Save token, user data, and is_admin status in auth context and localStorage
+      setAuthData({ user: identity, token: access_token, isAdmin: is_admin });
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('is_admin', is_admin);
 
       alert('Login successful!');
       setEmail('');
       setPassword('');
-      onClose();  // Close the popup on successful login
-     
-      // Redirect to RecipesPage
-      navigate("/recipes");  // Adjust the path to your RecipesPage route
+      onClose();
+
+      // Redirect based on admin status
+      if (is_admin) {
+        navigate("/admin");  // Redirect to admin page
+      } else {
+        navigate("/recipes");  // Redirect to recipes page
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
       alert('Login failed, please check your credentials and try again.');
     }
   };
@@ -45,7 +47,7 @@ const LoginPopup = ({ onClose }) => {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
-          type="text"  // Assuming username is expected
+          type="text"
           placeholder="Username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -60,7 +62,7 @@ const LoginPopup = ({ onClose }) => {
         />
         <button type="submit">Login</button>
       </form>
-      <button onClick={onClose}>Close</button> {/* Button to close the popup */}
+      <button onClick={onClose}>Close</button>
     </div>
   );
 };
