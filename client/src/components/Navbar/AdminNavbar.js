@@ -6,7 +6,7 @@ const AdminNavbar = () => {
     <nav>
       <Link to="/">Home</Link>
       <Link to="/admin">Admin</Link>
-      <Link to="/support">Support</Link>
+      <Link to="/admin/support_tickets">Support</Link>
     </nav>
   );
 }
