@@ -47,7 +47,11 @@ const HomePage = () => {
       
       <div className="recipe-container">
         {filteredRecipes.map(recipe => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+          <RecipeCard 
+            key={recipe.id} 
+            recipe={recipe} 
+            isHomepage={true} // Pass this prop to hide favorites and reviews buttons
+          />
         ))}
       </div>
       <Footer />

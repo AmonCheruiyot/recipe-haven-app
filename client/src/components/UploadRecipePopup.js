@@ -10,7 +10,7 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
     description: '',
     ingredients: '',
     instructions: '',
-    main_photo: null,
+    main_photo: '', // Initialize as an empty string
   });
   const [error, setError] = useState(null); // To handle errors
 
@@ -18,19 +18,31 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
     const { name, value, files } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: files ? files[0] : value,
+      [name]: files ? files[0] : value, // Handle file input or URL input
     }));
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
+    // Create FormData instance
     const data = new FormData();
-    for (const key in formData) {
-      if (formData[key]) {
-        data.append(key, formData[key]);
-      }
+    
+    // Handle main_photo as a URL or file
+    if (typeof formData.main_photo === 'string') {
+      data.append('main_photo', formData.main_photo); // Append URL directly
+    } else if (formData.main_photo) {
+      data.append('main_photo', formData.main_photo); // Append file
+    } else {
+      setError('Main photo is required.');
+      return;
     }
+
+    // Append other fields
+    data.append('name', formData.name);
+    data.append('description', formData.description);
+    data.append('ingredients', formData.ingredients);
+    data.append('instructions', formData.instructions);
 
     try {
       const token = authData.token; // Get the token from authData
@@ -49,7 +61,7 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
           description: '',
           ingredients: '',
           instructions: '',
-          main_photo: null,
+          main_photo: '',
         }); // Clear form
         onClose(); // Close the popup
       } else {
@@ -95,6 +107,13 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
           value={formData.instructions}
           onChange={handleChange}
           required
+        />
+        <input
+          type="text"
+          name="main_photo"
+          placeholder="Photo URL (or select a file)"
+          value={typeof formData.main_photo === 'string' ? formData.main_photo : ''}
+          onChange={handleChange}
         />
         <input
           type="file"

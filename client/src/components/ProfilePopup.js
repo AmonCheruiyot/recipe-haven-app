@@ -12,7 +12,7 @@ const ProfilePopup = ({ onClose }) => {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [currentPhoto, setCurrentPhoto] = useState('');
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState(null); // Store selected recipe ID
 
   // Password handling states
   const [newPassword, setNewPassword] = useState('');
@@ -87,12 +87,12 @@ const ProfilePopup = ({ onClose }) => {
     }
   };
 
-  const handleRecipeClick = (recipe) => {
-    setSelectedRecipe(recipe);
+  const handleRecipeClick = (recipeId) => {
+    setSelectedRecipeId(recipeId); // Set selected recipe ID
   };
 
   const handleCloseRecipePopup = () => {
-    setSelectedRecipe(null);
+    setSelectedRecipeId(null); // Clear selected recipe ID to close the popup
   };
 
   const handleClose = () => {
@@ -150,12 +150,13 @@ const ProfilePopup = ({ onClose }) => {
       <h3 className="favorite-recipes-title">Favorite Recipes:</h3>
       <ul className="favorite-recipes-list">
         {favoriteRecipes.map((recipe) => (
-          <li key={recipe.id} onClick={() => handleRecipeClick(recipe)} className="favorite-recipe-item">
+          <li key={recipe.id} onClick={() => handleRecipeClick(recipe.id)} className="favorite-recipe-item">
             {recipe.name}
           </li>
         ))}
       </ul>
-      {selectedRecipe && <RecipePopup recipe={selectedRecipe} onClose={handleCloseRecipePopup} />}
+      {/* Render RecipePopup if a recipe is selected */}
+      {selectedRecipeId && <RecipePopup recipeId={selectedRecipeId} onClose={handleCloseRecipePopup} />}
       <button onClick={handleClose} className="close-button">Close</button>
     </div>
   );

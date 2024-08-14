@@ -4,7 +4,7 @@ import RecipePopup from './RecipePopup'; // Recipe details and possibly update f
 import ReviewPopup from './ReviewPopup'; // Import the ReviewPopup component
 import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
-const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite }) => {
+const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isHomepage }) => {
   const { authData } = useContext(AuthContext); // Get auth data from context
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
@@ -32,8 +32,10 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite }) =
   }, [recipe.id]);
 
   useEffect(() => {
-    fetchReviews();
-  }, [fetchReviews]); // Fetch reviews for the recipe
+    if (isReviewPopupOpen) {
+      fetchReviews(); // Fetch reviews only when the review popup is open
+    }
+  }, [isReviewPopupOpen, fetchReviews]);
 
   const handleToggleFavorite = async () => {
     setLoading(true); // Start loading
@@ -72,17 +74,22 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite }) =
 
       <div className="recipe-card-buttons">
         <button onClick={openPopup}>View Details</button>
-        <span
-          onClick={handleToggleFavorite}
-          style={{
-            cursor: 'pointer',
-            fontSize: '24px',
-            color: isFavorite ? 'red' : 'gray', // Color red if isFavorite is true
-          }}
-        >
-          {loading ? '🔄' : isFavorite ? '❤️' : '🤍'} {/* Show loading indicator */}
-        </span>
-        <button onClick={openReviewPopup}>View Reviews ({reviews.length})</button>
+
+        {!isHomepage && (
+          <>
+            <span
+              onClick={handleToggleFavorite}
+              style={{
+                cursor: 'pointer',
+                fontSize: '24px',
+                color: isFavorite ? 'red' : 'gray', // Color red if isFavorite is true
+              }}
+            >
+              {loading ? '🔄' : isFavorite ? '❤️' : '🤍'} {/* Show loading indicator */}
+            </span>
+            <button onClick={openReviewPopup}>View Reviews ({reviews.length})</button>
+          </>
+        )}
       </div>
 
       {isPopupOpen && (
@@ -101,19 +108,6 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite }) =
           onReviewAdded={fetchReviews} // Refetch reviews after adding if needed
         />
       )}
-
-      <div className="recipe-reviews">
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review.id} className="review">
-              <p><strong>{review.author}: </strong>{review.comment} <span>({review.rating}/5)</span></p>
-              
-            </div>
-          ))
-        ) : (
-          <p>No reviews yet.</p>
-        )}
-      </div>
     </div>
   );
 };

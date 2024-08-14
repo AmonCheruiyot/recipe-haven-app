@@ -3,21 +3,21 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 400px;
-  max-width: 90%; /* Responsive width */
-  max-height: 80%; /* Allow the popup to take up at most 80% of the viewport height */
+  width: 600px; /* Increased width */
+  max-width: 95%; /* Adjusted for responsiveness */
+  max-height: 85%; /* Adjusted for responsiveness */
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  z-index: 1000; /* Ensure it appears above other elements */
-  overflow-y: auto; /* Allow scrolling if content is too long */
+  padding: 25px; /* Increased padding for more space */
+  z-index: 1000;
+  overflow-y: auto;
 }
 
 /* Title Style */
 .profile-title {
-  margin-bottom: 15px; /* Reduced margin for better fit */
-  font-size: 24px;
+  margin-bottom: 20px; /* Adjusted for more space */
+  font-size: 26px; /* Slightly larger font */
   text-align: center;
   color: #333;
 }
@@ -30,11 +30,11 @@
 
 /* Profile Input Styles */
 .profile-input {
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px; /* Increased padding for a more spacious feel */
+  margin: 12px 0; /* Adjusted margin */
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box; /* Ensure padding is included in width calculation */
+  box-sizing: border-box;
 }
 
 /* Profile Photo Styles */
@@ -42,17 +42,17 @@
   max-width: 100%;
   height: auto;
   border-radius: 50%;
-  margin: 10px 0;
+  margin: 12px 0; /* Adjusted margin */
 }
 
 /* File Input */
 .profile-file-input {
-  margin: 10px 0;
+  margin: 12px 0; /* Adjusted margin */
 }
 
 /* Button Style */
 .profile-button {
-  padding: 10px;
+  padding: 12px;
   color: #fff;
   background-color: #007bff;
   border: none;
@@ -67,8 +67,8 @@
 
 /* Favorite Recipes Title */
 .favorite-recipes-title {
-  margin-top: 20px; /* Manage margin for spacing */
-  font-size: 20px;
+  margin-top: 25px; /* Manage margin for spacing */
+  font-size: 22px; /* Slightly larger font */
   color: #333;
 }
 
@@ -80,12 +80,12 @@
 
 /* Favorite Recipe Item Styles */
 .favorite-recipe-item {
-  padding: 10px;
+  padding: 12px; /* Increased padding for more space */
   background: #f9f9f9;
   border-radius: 4px;
-  margin: 5px 0;
+  margin: 6px 0; /* Adjusted margin */
   cursor: pointer;
-  transition: background 0.3s; /* Smooth transition */
+  transition: background 0.3s;
 }
 
 /* Favorite Recipe Item Hover Effect */
@@ -95,8 +95,8 @@
 
 /* Close Button Styles */
 .close-button {
-  padding: 10px;
-  margin-top: 10px; /* Ensure there's space above the button */
+  padding: 12px;
+  margin-top: 12px; /* Ensure there's space above the button */
   color: #fff;
   background-color: #dc3545;
   border: none;

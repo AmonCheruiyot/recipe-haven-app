@@ -38,7 +38,7 @@ const RecipePopup = ({ recipeId, onClose }) => {
 
   return (
     <div className="recipe-popup">
-      <button onClick={onClose}>Close</button>
+      <button className="close-button" onClick={onClose}>×</button>
       <h2>{recipe.name}</h2>
       <img src={recipe.main_photo} alt={recipe.name} />
       <p><strong>Description:</strong> {recipe.description}</p>
