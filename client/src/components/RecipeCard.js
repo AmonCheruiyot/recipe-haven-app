@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './RecipeCard.css';
-import RecipePopup from './RecipePopup'; // Recipe details and possibly update functionality
-import ReviewPopup from './ReviewPopup'; // Import the ReviewPopup component
-import { AuthContext } from '../context/AuthContext'; // Import AuthContext
+import RecipePopup from './RecipePopup';
+import ReviewPopup from './ReviewPopup';
+import { AuthContext } from '../context/AuthContext';
 
 const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isHomepage }) => {
-  const { authData } = useContext(AuthContext); // Get auth data from context
+  const { authData } = useContext(AuthContext); 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [error, setError] = useState(null); // State for error handling
-  const [loading, setLoading] = useState(false); // State for loading
+  const [averageRating, setAverageRating] = useState(0);
+  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(false); 
 
   // Open and close recipe details popup
   const openPopup = () => setIsPopupOpen(true);
@@ -26,27 +27,44 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isH
       const response = await fetch(`https://recipe-app-0i3m.onrender.com/recipes/${recipe.id}/reviews`);
       const data = await response.json();
       setReviews(data);
+      
+      // Calculate and set average rating
+      const total = data.reduce((sum, review) => sum + review.rating, 0);
+      const average = data.length > 0 ? total / data.length : 0;
+      setAverageRating(average);
+
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
   }, [recipe.id]);
 
+  // Fetch reviews as soon as the component loads to show the average rating
   useEffect(() => {
-    if (isReviewPopupOpen) {
-      fetchReviews(); // Fetch reviews only when the review popup is open
+    fetchReviews();
+  }, [fetchReviews]);
+
+  const renderStars = (averageRating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} style={{ color: i <= averageRating ? '#ffc107' : '#e4e5e9' }}>
+          ★
+        </span>
+      );
     }
-  }, [isReviewPopupOpen, fetchReviews]);
+    return stars;
+  };
 
   const handleToggleFavorite = async () => {
-    setLoading(true); // Start loading
-    setError(null); // Reset error state
+    setLoading(true); 
+    setError(null); 
     try {
-      const method = isFavorite ? 'DELETE' : 'POST'; // Determine method based on current state
+      const method = isFavorite ? 'DELETE' : 'POST'; 
       const response = await fetch(`https://recipe-app-0i3m.onrender.com/recipes/${recipe.id}/favorites`, {
         method: method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authData.token}`, // Use token from context
+          'Authorization': `Bearer ${authData.token}`, 
         },
       });
 
@@ -55,11 +73,11 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isH
         throw new Error(errorData.message || 'Something went wrong!');
       }
 
-      onToggleFavorite(recipe.id, !isFavorite); // Update favorite status in parent component
+      onToggleFavorite(recipe.id, !isFavorite); 
     } catch (error) {
-      setError(error.message); // Set error message to display
+      setError(error.message); 
     } finally {
-      setLoading(false); // End loading
+      setLoading(false); 
     }
   };
 
@@ -68,6 +86,12 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isH
       <img src={recipe.main_photo} alt={recipe.name} className="recipe-image" />
       <h3>{recipe.name}</h3>
       <p><strong>Description:</strong> {recipe.description}</p>
+
+      {/* Display average rating as stars */}
+      <div className="average-rating">
+        {renderStars(Math.round(averageRating))} 
+        <span>({averageRating.toFixed(1)})</span> 
+      </div>
 
       {/* Display error message if any */}
       {error && <div className="error-message">{error}</div>}
@@ -82,10 +106,10 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isH
               style={{
                 cursor: 'pointer',
                 fontSize: '24px',
-                color: isFavorite ? 'red' : 'gray', // Color red if isFavorite is true
+                color: isFavorite ? 'red' : 'gray',
               }}
             >
-              {loading ? '🔄' : isFavorite ? '❤️' : '🤍'} {/* Show loading indicator */}
+              {loading ? '🔄' : isFavorite ? '❤️' : '🤍'}
             </span>
             <button onClick={openReviewPopup}>View Reviews ({reviews.length})</button>
           </>
@@ -105,7 +129,7 @@ const RecipeCard = ({ recipe, onRecipeUpdated, isFavorite, onToggleFavorite, isH
           recipeId={recipe.id}
           reviews={reviews}
           onClose={closeReviewPopup}
-          onReviewAdded={fetchReviews} // Refetch reviews after adding if needed
+          onReviewAdded={fetchReviews}
         />
       )}
     </div>
