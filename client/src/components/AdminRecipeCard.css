@@ -10,7 +10,7 @@
 .admin-recipe-card img {
     width: 100%;
     max-width: 300px; /* You can adjust the max-width */
-    height: auto;
+    height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
