@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Modal from './Modal'; // Import the modal
 
-const RegisterPopup = ({ onClose, onRegisterSuccess }) => { // Accept onRegisterSuccess as a prop
+const RegisterPopup = ({ isOpen, onClose, onRegisterSuccess }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [photo, setPhoto] = useState(null); // For profile photo upload
+  const [photo, setPhoto] = useState(null);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -15,7 +16,7 @@ const RegisterPopup = ({ onClose, onRegisterSuccess }) => { // Accept onRegister
     formData.append('email', email);
     formData.append('password', password);
     if (photo) {
-      formData.append('photo', photo); // Append photo if there is one
+      formData.append('photo', photo);
     }
 
     try {
@@ -30,9 +31,9 @@ const RegisterPopup = ({ onClose, onRegisterSuccess }) => { // Accept onRegister
       setUsername('');
       setEmail('');
       setPassword('');
-      setPhoto(null); // Clear the file input
-
-      onRegisterSuccess(); // Call the success callback
+      setPhoto(null);
+      onRegisterSuccess();
+      onClose(); // Close modal after successful registration
 
     } catch (error) {
       console.error(error);
@@ -41,37 +42,39 @@ const RegisterPopup = ({ onClose, onRegisterSuccess }) => { // Accept onRegister
   };
 
   return (
-    <div className="register-popup">
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <input
-          type="file"
-          onChange={(e) => setPhoto(e.target.files[0])}
-        />
-        <button type="submit">Register</button>
-      </form>
-    </div>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <div className="register-popup">
+        <h2>Register</h2>
+        <form onSubmit={handleRegister}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <input
+            type="file"
+            onChange={(e) => setPhoto(e.target.files[0])}
+          />
+          <button type="submit">Register</button>
+        </form>
+      </div>
+    </Modal>
   );
 };
 

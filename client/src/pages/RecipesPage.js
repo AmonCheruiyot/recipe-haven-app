@@ -3,13 +3,13 @@ import RecipesNavbar from '../components/Navbar/RecipesNavbar';
 import RecipeCard from '../components/RecipeCard';
 import Footer from '../components/Footer';
 import axios from 'axios';
-import UploadRecipe from '../components/UploadRecipePopup';
+import UploadRecipePopup from '../components/UploadRecipePopup'; // Update this import
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]); // State for filtered recipes
   const [searchTerm, setSearchTerm] = useState(''); // State for search term
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false); // To manage popup state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -48,26 +48,7 @@ const RecipesPage = () => {
 
   const handleRecipeUploaded = () => {
     fetchRecipes(); // Refresh the recipe list after upload
-  };
-
-  const handleRecipeUpdated = () => {
-    fetchRecipes(); // Refresh the recipe list after update
-  };
-
-  const handleToggleFavorite = (recipeId, isFavorite) => {
-    axios.post(`https://recipe-app-0i3m.onrender.com/recipes/${recipeId}/favorite`)
-      .then(() => {
-        // Update the favorite status locally without needing to refetch all recipes
-        setRecipes(prevRecipes =>
-          prevRecipes.map(recipe =>
-            recipe.id === recipeId ? { ...recipe, isFavorite: !isFavorite } : recipe
-          )
-        );
-      })
-      .catch(error => {
-        setError('Failed to update favorite status. Please try again later.');
-        console.error(error);
-      });
+    setIsUploading(false); // Close the upload popup after successful upload
   };
 
   return (
@@ -77,7 +58,10 @@ const RecipesPage = () => {
         {isUploading ? 'Cancel Upload' : 'Upload Recipe'}
       </button>
       {isUploading && (
-        <UploadRecipe onRecipeUploaded={handleRecipeUploaded} />
+        <UploadRecipePopup 
+          onClose={() => setIsUploading(false)} // Close the popup when "Close" is clicked
+          onRecipeAdded={handleRecipeUploaded}  // Refresh recipes after upload
+        />
       )}
       
       {/* Search Input */}
@@ -99,9 +83,6 @@ const RecipesPage = () => {
           <RecipeCard
             key={recipe.id}
             recipe={recipe}
-            onRecipeUpdated={handleRecipeUpdated}
-            onToggleFavorite={() => handleToggleFavorite(recipe.id, recipe.isFavorite)} // Pass the toggle function
-            isFavorite={recipe.isFavorite} // Assuming recipes have an isFavorite field
           />
         ))}
       </div>

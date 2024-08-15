@@ -7,15 +7,22 @@ const HomepageNavbar = () => {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [showRegisterPopup, setShowRegisterPopup] = useState(false);
 
+  // Function to open the Login Popup
   const handleOpenLogin = () => setShowLoginPopup(true);
+  
+  // Function to close the Login Popup
   const handleCloseLogin = () => setShowLoginPopup(false);
+  
+  // Function to open the Register Popup
   const handleOpenRegister = () => setShowRegisterPopup(true);
+  
+  // Function to close the Register Popup
   const handleCloseRegister = () => setShowRegisterPopup(false);
 
   // Handle opening LoginPopup from RegisterPopup
   const handleRegisterSuccess = () => {
     handleCloseRegister(); // Close the RegisterPopup
-    handleOpenLogin(); // Open the LoginPopup
+    handleOpenLogin(); // Open the LoginPopup after successful registration
   };
 
   return (
@@ -29,8 +36,9 @@ const HomepageNavbar = () => {
       {showLoginPopup && <LoginPopup onClose={handleCloseLogin} />}
       {showRegisterPopup && (
         <RegisterPopup
-          onClose={handleCloseRegister}
-          onRegisterSuccess={handleRegisterSuccess} // Pass the callback
+          isOpen={showRegisterPopup} // Passing the open state
+          onClose={handleCloseRegister} // Function to close the modal
+          onRegisterSuccess={handleRegisterSuccess} // Callback for successful registration
         />
       )}
     </nav>
