@@ -12,6 +12,7 @@
     font-size: 14px; /* Comfortable font size for readability */
     line-height: 1.4; /* Slightly reduced line height for compact text */
     color: #388E3C; /* Darker Green text color for contrast */
+    transition: transform 0.3s ease; /* Smooth transition for show/hide effect */
 }
 
 .footer a {
