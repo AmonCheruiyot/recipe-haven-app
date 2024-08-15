@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../context/AuthContext'; // Adjust this path based on your project structure
+import { AuthContext } from '../context/AuthContext';
 import './UploadRecipePopup.css'; // Optional: Include any additional styles
 
 const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
@@ -10,66 +10,77 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
     description: '',
     ingredients: '',
     instructions: '',
-    main_photo: '', // Initialize as an empty string
+    main_photo: '', // URL or empty string
   });
   const [error, setError] = useState(null); // To handle errors
 
+  // Handle form field changes
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: files ? files[0] : value, // Handle file input or URL input
+      [name]: value, // Handle URL value for main_photo
     }));
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
 
-    // Create FormData instance
-    const data = new FormData();
-    
-    // Handle main_photo as a URL or file
-    if (typeof formData.main_photo === 'string') {
-      data.append('main_photo', formData.main_photo); // Append URL directly
-    } else if (formData.main_photo) {
-      data.append('main_photo', formData.main_photo); // Append file
-    } else {
+    // Ensure the main photo URL is set
+    if (!formData.main_photo) {
       setError('Main photo is required.');
       return;
     }
 
-    // Append other fields
+    // Ensure token is present and valid
+    if (!authData || !authData.token) {
+      setError('You must be logged in to upload a recipe.');
+      return;
+    }
+
+    // Create a new FormData object to send form data, including the URL
+    const data = new FormData();
     data.append('name', formData.name);
     data.append('description', formData.description);
     data.append('ingredients', formData.ingredients);
     data.append('instructions', formData.instructions);
+    data.append('main_photo_url', formData.main_photo); // URL submission
 
     try {
       const token = authData.token; // Get the token from authData
       const response = await axios.post('https://recipe-app-0i3m.onrender.com/recipes', data, {
         headers: {
-          Authorization: `Bearer ${token}`, // Use the token from authData. Do NOT set Content-Type.
+          Authorization: `Bearer ${token}`, // Ensure token is prefixed with 'Bearer '
+          'Content-Type': 'multipart/form-data',
         },
       });
 
-      // Check for successful response
+      // Handle successful upload
       if (response.status === 200 || response.status === 201) {
         alert('Recipe uploaded successfully');
-        onRecipeAdded(); // Notify parent about the new recipe
+        onRecipeAdded(); // Notify parent component about new recipe
         setFormData({
           name: '',
           description: '',
           ingredients: '',
           instructions: '',
-          main_photo: '',
-        }); // Clear form
+          main_photo: '', // Clear the form fields
+        });
         onClose(); // Close the popup
       } else {
         setError('Failed to upload recipe. Please try again.');
       }
     } catch (error) {
-      console.error("Error uploading recipe:", error.response?.data || error.message);
-      setError(error.response?.data?.message || "Failed to upload recipe. Please try again.");
+      // Enhanced error logging for debugging
+      console.error('Error uploading recipe:', error);
+      console.error('Response Data:', error.response?.data);
+
+      // Set a more user-friendly error message
+      setError(
+        error.response?.data?.message ||
+        error.response?.statusText ||
+        'An error occurred while uploading the recipe. Please try again.'
+      );
     }
   };
 
@@ -77,7 +88,7 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
     <div className="upload-recipe-popup">
       <button onClick={onClose}>Close</button>
       <h2>Upload New Recipe</h2>
-      {error && <p className="error">{error}</p>} {/* Show error message if exists */}
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleUpload}>
         <input
           type="text"
@@ -108,20 +119,17 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
           onChange={handleChange}
           required
         />
+
+        {/* URL Input for Main Photo */}
         <input
           type="text"
           name="main_photo"
-          placeholder="Photo URL (or select a file)"
-          value={typeof formData.main_photo === 'string' ? formData.main_photo : ''}
+          placeholder="Photo URL"
+          value={formData.main_photo}
           onChange={handleChange}
+          required
         />
-        <input
-          type="file"
-          name="main_photo"
-          accept="image/*"
-          onChange={handleChange}
-        />
-        
+
         <button type="submit">Upload Recipe</button>
       </form>
     </div>
