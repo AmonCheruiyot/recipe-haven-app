@@ -7,8 +7,8 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.7); /* Dark overlay with transparency */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
     z-index: 1000;
 }
 
@@ -18,98 +18,38 @@
     padding: 30px 20px; /* Ample padding for breathing space */
     border-radius: 12px; /* Smoothly rounded corners */
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Deeper shadow for a more pronounced effect */
-    width: 500px; /* Wider for better readability */
+    width: 500px; /* Fixed width for the card */
     max-width: 90%; /* Responsive width for smaller screens */
+    max-height: 90vh; /* Restrict height to prevent overflow */
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds max-height */
     position: relative; /* Position for the close button */
     transition: transform 0.3s ease-in-out; /* Smooth open/close transition */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Ensure content is centered inside */
 }
 
-/* Close Button as Small 'X' */
-.close-button {
-    position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
-    background: none !important; /* No background */
-    border: none !important; /* No border */
-    font-size: 20px !important; /* Slightly smaller 'X' */
-    font-weight: bold !important; /* Bold 'X' */
-    color: #333 !important; /* Dark color for the 'X' */
-    cursor: pointer !important; /* Pointer cursor */
-    z-index: 1001 !important; /* Ensure it's above modal content */
-    padding: 0 !important; /* No padding */
-}
-
-/* Close Button Hover Effect */
-.close-button:hover {
-    color: #007bff !important; /* Change to blue on hover */
-}
-
-
-
-/* Modal Header */
-.modal-header {
-    margin-bottom: 20px; /* Space below the title */
-    font-size: 1.8em; /* Larger title for emphasis */
-    color: #333; /* Dark color for the header */
-    text-align: center; /* Center the text */
-    font-weight: bold; /* Make the header bold */
-}
-
-/* Input Styles */
+/* Input Styles (one per row) */
 .modal-content input {
-    width: 100%; /* Full width for inputs */
+    width: 80%; /* Full width input */
     padding: 12px; /* Comfortable padding */
     margin-bottom: 15px; /* Space between inputs */
     border: 1px solid #ccc; /* Light gray border */
     border-radius: 6px; /* Rounded corners for inputs */
     font-size: 16px; /* Adjust input font size */
     transition: border-color 0.3s ease; /* Smooth transition for focus effect */
+    display: block; /* Make sure inputs are block-level, taking up full row */
 }
 
-/* Input Focus */
+/* Input Focus Effect */
 .modal-content input:focus {
     border-color: #007bff; /* Blue border on focus */
     outline: none; /* Remove default outline */
-}
-
-/* Button Styles */
-.modal-content button {
-    width: 100%; /* Full width button */
-    padding: 12px; /* Comfortable padding */
-    background-color: #007bff; /* Bootstrap primary color */
-    color: #fff; /* White text color */
-    border: none; /* No border */
-    border-radius: 6px; /* Rounded corners for button */
-    font-size: 18px; /* Larger font for the button */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover transition */
-}
-
-/* Button Hover */
-.modal-content button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px); /* Slight upward shift on hover */
-}
-
-/* Error Message Styles */
-.error-message {
-    color: #e74c3c; /* Red color for errors */
-    margin-bottom: 15px; /* Space below the error message */
-    text-align: center; /* Center the error message */
-    font-size: 0.9em; /* Slightly smaller error text */
 }
 
 /* Responsive Adjustments */
 @media (max-width: 500px) {
     .modal-content {
         width: 90%; /* Full width for smaller screens */
-    }
-
-    .modal-header {
-        font-size: 1.4em; /* Adjust title font size */
-    }
-
-    .modal-content button {
-        font-size: 16px; /* Smaller button text for mobile */
     }
 }
