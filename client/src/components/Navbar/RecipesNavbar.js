@@ -8,7 +8,6 @@ const RecipesNavbar = () => {
       <div className="nav-links">
         <Link to="/">Home</Link>
         <Link to="/profile">Profile</Link>
-        <Link to="/wishlist">Wishlist</Link>
       </div>
     </nav>
   );

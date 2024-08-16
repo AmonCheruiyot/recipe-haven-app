@@ -19,7 +19,7 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value, // Handle URL value for main_photo
+      [name]: value,
     }));
   };
 
@@ -50,35 +50,21 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
       const token = authData.token; // Get the token from authData
       const response = await axios.post('https://recipe-app-0i3m.onrender.com/recipes', data, {
         headers: {
-          Authorization: `Bearer ${token}`, // Ensure token is prefixed with 'Bearer '
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      // Handle successful upload
       if (response.status === 200 || response.status === 201) {
         alert('Recipe uploaded successfully');
         onRecipeAdded(); // Notify parent component about new recipe
-        setFormData({
-          name: '',
-          description: '',
-          ingredients: '',
-          instructions: '',
-          main_photo: '', // Clear the form fields
-        });
         onClose(); // Close the popup
       } else {
         setError('Failed to upload recipe. Please try again.');
       }
     } catch (error) {
-      // Enhanced error logging for debugging
-      console.error('Error uploading recipe:', error);
-      console.error('Response Data:', error.response?.data);
-
-      // Set a more user-friendly error message
       setError(
         error.response?.data?.message ||
-        error.response?.statusText ||
         'An error occurred while uploading the recipe. Please try again.'
       );
     }
@@ -119,8 +105,6 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
           onChange={handleChange}
           required
         />
-
-        {/* URL Input for Main Photo */}
         <input
           type="text"
           name="main_photo"
@@ -129,7 +113,6 @@ const UploadRecipePopup = ({ onClose, onRecipeAdded }) => {
           onChange={handleChange}
           required
         />
-
         <button type="submit">Upload Recipe</button>
       </form>
     </div>
