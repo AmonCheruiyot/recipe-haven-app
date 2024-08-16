@@ -1,9 +1,7 @@
 /* Footer Styles */
 
 .footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
+    position: relative; /* Changed from fixed to relative */
     width: 100%;
     background-color: #F9FBE7; /* Lighter Green for a soft and fresh footer background */
     text-align: center;
@@ -12,6 +10,8 @@
     font-size: 14px; /* Comfortable font size for readability */
     line-height: 1.4; /* Slightly reduced line height for compact text */
     color: #388E3C; /* Darker Green text color for contrast */
+    transition: transform 0.3s ease; /* Smooth transition for show/hide effect */
+    margin-top: 20px; /* Adds space above the footer to separate it from content */
 }
 
 .footer a {
